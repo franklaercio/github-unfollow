@@ -1,6 +1,6 @@
 from selenium import webdriver
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from webdriver_manager.chrome import ChromeDriverManager
 
-driver = webdriver.Chrome(executable_path=r'/home/frank/workspace/python/github-unfollow/chomerdriver')
+driver = webdriver.Chrome(ChromeDriverManager().install())
 driver.get("http://www.python.org")
 assert "Python" in driver.title
