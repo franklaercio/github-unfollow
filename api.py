@@ -2,43 +2,67 @@ import time
 import json
 import requests
 
-def get_unfollowers(username, credentials, page_number):
-  base_url = "https://api.github.com/" 
-  url_followers = str(base_url + "users/" + username + "/following?per_page=1&page=" + str(page_number))
+def find_users_per_page(base_url, time_sleep, username, credentials, page_number):
+  url = str(base_url + "users/" + username + "/following?per_page=100&page=" + str(page_number))
+  response = requests.get(url=url, auth=(username, credentials)).json()
 
-  response_followers = requests.get(url_followers, auth=(username, credentials)).json()
+  time.sleep(int(time_sleep))
 
-  time.sleep(2)
+  if response != 403:
+    return response
+  else: 
+    print("Check your number connections or followings!")
+    return  
 
-  for user in response_followers:
+def find_unfollowers(base_url, time_sleep, username, credentials, list_users, list_unfollows):
+  for user in list_users:
     login = json.dumps(user["login"]).replace("\"", "").replace("\"", "")
-    url_follow_back = base_url + "users/" + login + "/following/" + username
-    response_follow_back = requests.get(url_follow_back, auth=(username, credentials))
+    url = base_url + "users/" + login + "/following/" + username
 
-    time.sleep(1)
+    response = requests.get(url, auth=(username, credentials))
 
-    if response_follow_back.status_code == 404:
-      url_unfollow = base_url + "user/following/" + login
+    time.sleep(int(time_sleep))
 
-      response_unfollow = requests.delete(url_unfollow, auth=(username, credentials))
+    if response.status_code == 404:
+      list_unfollows.append(login)
+      print("User " + login + " doesn't follow you!")
+    elif response.status_code == 403:
+      print("You exceeded the maximum number of connections!")
+      return False   
+    else:
+      print("User " + login + " follow you!")    
 
-      if response_unfollow.status_code == 204:
+  return len(list_users) == 100 
+
+def delete_user(base_url, time_sleep, username, credentials, list_unfollows):
+    for login in list_unfollows:
+      response = requests.delete(str(base_url + "user/following/" + login), 
+          auth=(username, credentials))
+
+      if response.status_code == 204:
         print("Unfollowing " + login + "!")
+      elif response.status_code == 403:
+        print("You exceeded the maximum number of connections!")
+        break  
       else:
         print("Could not unfollow " + login + "!")
+        
+      time.sleep(int(time_sleep))
 
-      time.sleep(1)
-
-  return len(response_followers) < 100 
-
-def unfollow_back(username, credentials):
+def unfollow_back(base_url, time_sleep, username, credentials):
+  list_unfollows = []
   next_page = True
   page_number = 1
 
   while next_page:
-    has_next_page = get_unfollowers(username, credentials, page_number)
+    list_users = find_users_per_page(base_url, time_sleep, username, credentials, page_number)
 
-    if has_next_page:
+    there_is_next_page = find_unfollowers(base_url, time_sleep, username, 
+        credentials, list_users, list_unfollows)
+
+    if there_is_next_page:
       page_number += 1
     else:
       next_page = False
+
+  delete_user(base_url, time_sleep, username, credentials, list_unfollows)    
