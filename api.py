@@ -15,13 +15,19 @@ def get_unfollowers(username, credentials, page_number):
     url_follow_back = base_url + "users/" + login + "/following/" + username
     response_follow_back = requests.get(url_follow_back, auth=(username, credentials))
 
-    time.sleep(2)
+    time.sleep(1)
 
     if response_follow_back.status_code == 404:
-      url_unfollow = str(base_url + "/" + login)
-      requests.delete(url_unfollow, auth=(username, credentials))
-      print("Unfollowing " + login + "!\n")
-      time.sleep(2)
+      url_unfollow = base_url + "user/following/" + login
+
+      response_unfollow = requests.delete(url_unfollow, auth=(username, credentials))
+
+      if response_unfollow.status_code == 204:
+        print("Unfollowing " + login + "!")
+      else:
+        print("Could not unfollow " + login + "!")
+
+      time.sleep(1)
 
   return len(response_followers) < 100 
 
