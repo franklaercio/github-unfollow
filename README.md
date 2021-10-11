@@ -1,5 +1,5 @@
 <h2 align="center"> 
-   <img alt="logo" width="98%" src="images/github_logo.png" />
+   <img alt="logo" width="40%" src="images/github_logo.png" />
 </h1>
 
 <p align="center">
@@ -23,10 +23,10 @@
 
 ## :bookmark_tabs: Resume of application
 
-Code to unfollow all people don't follow you back. This app was created using [GitHub API](https://docs.github.com/en/rest) and you need to create a token for access GitHub API, check this content on [GitHub Documentation](https://docs. github.com/en/rest/guides/getting-started-with-the-rest-api).
+Code to unfollow all people don't follow you back. This app was created using [GitHub API](https://docs.github.com/en/rest) and you need to create a token for access GitHub API, check this content on [GitHub Documentation](https://docs.github.com/en/rest/guides/getting-started-with-the-rest-api).
 
 <p align="center">
-  <img alt="app runing" width="96.5%" src="images/github_unfollow.png" />
+  <img alt="app runing" width="96.5%" src="images/github_unfollow.PNG" />
 </p>
 
 ## 🎲 Running the project
