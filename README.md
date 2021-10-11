@@ -1,5 +1,5 @@
-<h2 align="center"> 
-   <img alt="logo" width="40%" src="images/github_logo.png" />
+<h1 align="center"> 
+  :octocat: GitHub Unfollow
 </h1>
 
 <p align="center">
